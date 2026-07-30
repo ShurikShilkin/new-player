@@ -452,14 +452,15 @@
             gap: 6px;
         }
 
+        /* ===== РАЗНОМАСТНЫЕ — ВЕРТИКАЛЬНО ===== */
         .spectrum-off-label {
-            writing-mode: vertical-rl;
-            text-orientation: mixed;
+            writing-mode: horizontal-tb;
             color: #7b839e;
             font-size: 13px;
             font-weight: 600;
-            letter-spacing: 1px;
+            letter-spacing: 2px;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
             min-width: 22px;
@@ -468,10 +469,13 @@
             border-radius: 6px;
             border: 1px solid rgba(255, 255, 255, 0.05);
             user-select: none;
+            text-transform: uppercase;
+            line-height: 1.2;
         }
 
         .spectrum-off-label .suit {
             color: #f87171;
+            font-size: 14px;
         }
 
         .spectrum-grid-wrapper {
@@ -500,6 +504,7 @@
 
         .spectrum-suited-label .suit {
             color: #34d399;
+            font-size: 14px;
         }
 
         .spectrum-cell {
@@ -906,11 +911,17 @@
             </div>
 
             <div class="spectrum-wrapper">
-                <!-- Разномастные — ♥ ♦ -->
-                <div class="spectrum-off-label"><span class="suit">♥</span><span class="suit">♦</span><br>Разно<br>мастные</div>
+                <!-- РАЗНОМАСТНЫЕ — ВЕРТИКАЛЬНО, ♥ ПЕРЕД, ♦ ПОСЛЕ -->
+                <div class="spectrum-off-label">
+                    <span class="suit">♥</span>
+                    Р<br>а<br>з<br>н<br>о<br>м<br>а<br>с<br>т<br>н<br>ы<br>е
+                    <span class="suit">♦</span>
+                </div>
                 <div class="spectrum-grid-wrapper">
-                    <!-- Одномастные — ♠ ♣ -->
-                    <div class="spectrum-suited-label"><span class="suit">♠</span><span class="suit">♣</span> Одномастные</div>
+                    <!-- ОДНОМАСТНЫЕ — ♠ ПЕРЕД, ♣ ПОСЛЕ -->
+                    <div class="spectrum-suited-label">
+                        <span class="suit">♠</span> Одномастные <span class="suit">♣</span>
+                    </div>
                     <div class="spectrum-grid" id="spectrumGrid"></div>
                 </div>
             </div>
