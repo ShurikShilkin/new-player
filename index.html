@@ -1,0 +1,1378 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Позиции в покере — 10-макс</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(145deg, #1a1e2c 0%, #0f1219 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 10px;
+        }
+
+        .app-container {
+            max-width: 1200px;
+            width: 100%;
+            background: rgba(26, 30, 44, 0.85);
+            backdrop-filter: blur(6px);
+            border-radius: 40px;
+            padding: 20px 16px;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+        }
+
+        h1 {
+            color: #f0e9d8;
+            font-weight: 400;
+            font-size: 24px;
+            text-align: center;
+            letter-spacing: 1px;
+        }
+        .subtitle {
+            color: #7b839e;
+            text-align: center;
+            font-size: 15px;
+            margin-bottom: 20px;
+            opacity: 0.7;
+        }
+
+        /* ===== НАСТРОЙКИ ===== */
+        .settings-top {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .settings-top label {
+            color: #a9b0c9;
+            font-size: 17px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .settings-top select {
+            padding: 12px 24px;
+            background: #0c0f17;
+            border: 1px solid #2e3548;
+            border-radius: 14px;
+            color: #f0e9d8;
+            font-size: 19px;
+            font-weight: 500;
+            outline: none;
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23f0e9d8' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 16px center;
+            padding-right: 44px;
+        }
+
+        .settings-top select:focus {
+            border-color: #fbbf24;
+            box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.15);
+        }
+
+        .settings-top select option {
+            background: #1a1e2c;
+        }
+
+        /* ===== СТОЛ ===== */
+        .table-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .poker-table {
+            position: relative;
+            width: 100%;
+            max-width: 750px;
+            aspect-ratio: 16/9;
+            background: radial-gradient(ellipse at center, #1a6b3c 0%, #0f4a2a 70%, #0a2e1a 100%);
+            border-radius: 140px/90px;
+            border: 8px solid #2d1f0e;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6), inset 0 0 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .table-inner {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 85%;
+            height: 70%;
+            background: radial-gradient(ellipse at center, #1f7a4a 0%, #135a32 100%);
+            border-radius: 100px/60px;
+            border: 3px solid rgba(255, 215, 0, 0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(255, 255, 255, 0.04);
+            font-size: 24px;
+            letter-spacing: 8px;
+            text-transform: uppercase;
+            font-weight: 700;
+            pointer-events: none;
+        }
+
+        /* ===== ПОЗИЦИИ ===== */
+        .position {
+            position: absolute;
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: rgba(30, 40, 60, 0.85);
+            border: 3px solid rgba(255, 255, 255, 0.15);
+            color: #a9b0c9;
+            font-size: 12px;
+            font-weight: 700;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            line-height: 1.2;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+            user-select: none;
+            z-index: 10;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            cursor: pointer;
+        }
+
+        .position.hidden {
+            opacity: 0;
+            transform: scale(0.8);
+            pointer-events: none;
+        }
+
+        .position .pos-label {
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.3px;
+        }
+        .position .pos-name {
+            font-size: 9px;
+            font-weight: 400;
+            opacity: 0.6;
+        }
+
+        .position:hover {
+            transform: scale(1.12);
+            border-color: #fbbf24;
+            box-shadow: 0 0 25px rgba(251, 191, 36, 0.25);
+            z-index: 20;
+        }
+
+        .position.active {
+            border-color: #fbbf24;
+            background: rgba(251, 191, 36, 0.2);
+            box-shadow: 0 0 35px rgba(251, 191, 36, 0.35);
+            transform: scale(1.1);
+            z-index: 20;
+        }
+
+        .position.active .pos-label {
+            color: #fbbf24;
+        }
+
+        /* ===== РАССТАНОВКА ===== */
+        .pos-btn { bottom: 4%; left: 47%; transform: translateX(-50%); }
+        .pos-sb { bottom: 4%; left: 18%; }
+        .pos-co { bottom: 4%; right: 18%; }
+        .pos-bb { bottom: 24%; left: 2%; }
+        .pos-utg { bottom: 60%; left: 2%; }
+        .pos-hj { bottom: 24%; right: 2%; }
+        .pos-mp1 { bottom: 60%; right: 2%; }
+        .pos-utg1 { top: 4%; left: 18%; }
+        .pos-utg2 { top: 4%; left: 50%; transform: translateX(-50%); }
+        .pos-mp { top: 4%; right: 18%; }
+
+        /* ===== КАРТЫ РЯДОМ С ИГРОКОМ ===== */
+        .player-cards {
+            position: absolute;
+            display: flex;
+            gap: 4px;
+            z-index: 12;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+
+        .player-cards.visible {
+            opacity: 1;
+        }
+
+        .player-card {
+            width: 32px;
+            height: 46px;
+            border-radius: 4px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.5);
+            border: 2px solid #e5e7eb;
+            background: linear-gradient(135deg, #1a3a6a, #0f2640);
+            border-color: #1a3a6a;
+            background-image: repeating-linear-gradient(45deg, 
+                transparent, 
+                transparent 5px, 
+                rgba(255,255,255,0.03) 5px, 
+                rgba(255,255,255,0.03) 10px);
+            cursor: default;
+        }
+
+        .player-cards.hidden {
+            opacity: 0 !important;
+            pointer-events: none !important;
+        }
+
+        .cards-btn { bottom: 12%; left: 50%; transform: translateX(46px); }
+        .cards-sb { bottom: 12%; left: 12%; }
+        .cards-co { bottom: 12%; right: 12%; }
+        .cards-bb { bottom: 32%; left: -4%; }
+        .cards-utg { bottom: 68%; left: -4%; }
+        .cards-hj { bottom: 68%; right: -4%; }
+        .cards-mp1 { bottom: 32%; right: -4%; }
+        .cards-utg1 { top: -2%; left: 12%; }
+        .cards-utg2 { top: -2%; left: 50%; transform: translateX(38px); }
+        .cards-mp { top: -2%; right: 12%; }
+
+        /* ===== ФИШКИ ===== */
+        .chip {
+            position: absolute;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 12px;
+            color: white;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.4), inset 0 -2px 4px rgba(0,0,0,0.2);
+            z-index: 15;
+            pointer-events: none;
+            border: 2px solid rgba(255,255,255,0.15);
+            transition: opacity 0.3s ease;
+        }
+
+        .chip.hidden {
+            opacity: 0;
+        }
+
+        .chip-btn {
+            width: 34px;
+            height: 34px;
+            background: radial-gradient(circle at 35% 35%, #fbbf24, #d97706);
+            font-size: 9px;
+            border: 2px solid #fcd34d;
+            box-shadow: 0 0 20px rgba(251, 191, 36, 0.4);
+            bottom: 20%;
+            left: 45%;
+            transform: translateX(-50%);
+        }
+
+        .chip-sb {
+            width: 28px;
+            height: 28px;
+            background: radial-gradient(circle at 35% 35%, #f87171, #dc2626);
+            font-size: 11px;
+            bottom: 20%;
+            left: 18%;
+        }
+
+        .chip-bb {
+            width: 28px;
+            height: 28px;
+            background: radial-gradient(circle at 35% 35%, #f87171, #dc2626);
+            font-size: 11px;
+            bottom: 30%;
+            left: 10%;
+        }
+        .chip-bb-2 {
+            width: 28px;
+            height: 28px;
+            background: radial-gradient(circle at 35% 35%, #f87171, #dc2626);
+            font-size: 11px;
+            bottom: 35%;
+            left: 10%;
+        }
+
+        /* ===== ИНФО-ПАНЕЛЬ ===== */
+        .info-panel {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .info-card {
+            background: rgba(18, 22, 33, 0.7);
+            border-radius: 14px;
+            padding: 12px 12px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .info-card .label {
+            color: #7b839e;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+        }
+        .info-card .value {
+            color: #f0e9d8;
+            font-size: 19px;
+            font-weight: 700;
+            margin-top: 3px;
+            line-height: 1.3;
+        }
+        .info-card .value .highlight {
+            color: #fbbf24;
+        }
+        .info-card .desc {
+            color: #a9b0c9;
+            font-size: 14px;
+            margin-top: 4px;
+            line-height: 1.3;
+        }
+        .info-card .badge {
+            display: inline-block;
+            background: rgba(251, 191, 36, 0.12);
+            color: #fbbf24;
+            padding: 2px 10px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 600;
+            margin-top: 4px;
+        }
+        .info-card.opponent {
+            border-left: 3px solid #f87171;
+        }
+        .info-card.opponent .label {
+            color: #f87171;
+        }
+
+        /* ===== ГРАДАЦИЯ КАРТ ===== */
+        .groups-list {
+            margin-top: 6px;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+        .groups-list .group {
+            display: flex;
+            align-items: baseline;
+            gap: 4px;
+            padding: 1px 0;
+        }
+        .groups-list .group-icon {
+            font-size: 14px;
+            width: 18px;
+            text-align: center;
+        }
+        .groups-list .group-name {
+            color: #d4d9ec;
+            font-weight: 600;
+            min-width: 65px;
+            font-size: 13px;
+        }
+        .groups-list .group-hands {
+            color: #a9b0c9;
+            font-size: 13px;
+        }
+        .groups-list .group-hands .highlight-great { color: #fbbf24; font-weight: 700; }
+        .groups-list .group-hands .highlight-good { color: #86efac; font-weight: 600; }
+        .groups-list .group-hands .highlight-normal { color: #fcd34d; font-weight: 500; }
+
+        /* ===== СПЕКТР (С ПОДПИСЯМИ) ===== */
+        .spectrum-section {
+            background: rgba(18, 22, 33, 0.5);
+            border-radius: 14px;
+            padding: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .spectrum-title {
+            color: #7b839e;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .spectrum-title .hand-count {
+            color: #fbbf24;
+            font-size: 16px;
+        }
+
+        /* ОБЁРТКА ДЛЯ ТАБЛИЦЫ С ПОДПИСЯМИ */
+        .spectrum-wrapper {
+            display: flex;
+            align-items: stretch;
+            gap: 6px;
+        }
+
+        /* ВЕРТИКАЛЬНАЯ ПОДПИСЬ "Разномастные" */
+        .spectrum-off-label {
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+            color: #7b839e;
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 2px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 24px;
+            padding: 4px 0;
+            background: rgba(18, 22, 33, 0.3);
+            border-radius: 6px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            text-transform: uppercase;
+            user-select: none;
+        }
+
+        .spectrum-grid-wrapper {
+            flex: 1;
+            overflow-x: auto;
+        }
+
+        .spectrum-grid {
+            display: grid;
+            grid-template-columns: repeat(13, 1fr);
+            gap: 2px;
+            max-width: 100%;
+        }
+
+        /* ВЕРХНЯЯ ПОДПИСЬ "Одномастные" */
+        .spectrum-suited-label {
+            text-align: center;
+            color: #7b839e;
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            user-select: none;
+        }
+
+        .spectrum-cell {
+            aspect-ratio: 1;
+            background: #191e2b;
+            border-radius: 3px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 600;
+            color: #4a5070;
+            border: 1px solid #262d3e;
+            min-width: 32px;
+            min-height: 32px;
+            transition: all 0.2s;
+        }
+
+        .spectrum-cell.raise {
+            background: #2d7a4a !important;
+            color: #d4edda !important;
+            border-color: #1f5c37 !important;
+            box-shadow: inset 0 0 0 1px #3a9a5e;
+        }
+        .spectrum-cell.fold {
+            background: #7a2d2d !important;
+            color: #f5d4d4 !important;
+            border-color: #5c1f1f !important;
+            box-shadow: inset 0 0 0 1px #9a3a3a;
+        }
+        .spectrum-cell.empty {
+            background: transparent !important;
+            border-color: transparent !important;
+        }
+
+        /* ===== НАВИГАЦИЯ ===== */
+        .nav-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 5px;
+            margin-top: 14px;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            padding: 8px 14px;
+            background: rgba(18, 22, 33, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 10px;
+            color: #a9b0c9;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .nav-btn:hover {
+            background: rgba(251, 191, 36, 0.08);
+            border-color: #fbbf24;
+            color: #fbbf24;
+        }
+
+        .nav-btn.active {
+            background: rgba(251, 191, 36, 0.12);
+            border-color: #fbbf24;
+            color: #fbbf24;
+        }
+
+        /* ===== ПОДСКАЗКА ===== */
+        .tip {
+            margin-top: 14px;
+            padding: 14px 18px;
+            background: rgba(251, 191, 36, 0.05);
+            border-left: 3px solid #fbbf24;
+            border-radius: 8px;
+            color: #d4d9ec;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+        .tip strong {
+            color: #fbbf24;
+        }
+
+        /* ===== АДАПТИВ ДЛЯ ТЕЛЕФОНА ===== */
+        @media (max-width: 768px) {
+            .app-container { padding: 12px 10px; border-radius: 24px; }
+            h1 { font-size: 20px; }
+            .subtitle { font-size: 13px; margin-bottom: 14px; }
+
+            .position {
+                width: 48px;
+                height: 48px;
+                font-size: 9px;
+                border-width: 2px;
+            }
+            .position .pos-label { font-size: 9px; }
+            .position .pos-name { font-size: 7px; }
+
+            .player-card { width: 24px; height: 34px; }
+            .chip-btn { width: 26px; height: 26px; font-size: 7px; }
+            .chip-sb, .chip-bb, .chip-bb-2 { width: 22px; height: 22px; font-size: 9px; }
+
+            .info-panel { grid-template-columns: 1fr 1fr; gap: 8px; }
+            .info-card { padding: 10px 10px; }
+            .info-card .value { font-size: 16px; }
+            .info-card .desc { font-size: 12px; }
+            .info-card .label { font-size: 10px; }
+
+            .groups-list { font-size: 11px; }
+            .groups-list .group-name { font-size: 11px; min-width: 50px; }
+            .groups-list .group-hands { font-size: 11px; }
+            .groups-list .group-icon { font-size: 12px; width: 15px; }
+
+            .spectrum-cell {
+                font-size: 9px;
+                min-width: 24px;
+                min-height: 24px;
+            }
+
+            .spectrum-suited-label { font-size: 12px; }
+            .spectrum-off-label { font-size: 12px; min-width: 20px; }
+
+            .nav-btn {
+                padding: 6px 10px;
+                font-size: 12px;
+            }
+
+            .tip {
+                font-size: 14px;
+                padding: 10px 14px;
+            }
+
+            .settings-top label { font-size: 15px; }
+            .settings-top select {
+                font-size: 16px;
+                padding: 10px 18px;
+                padding-right: 36px;
+            }
+
+            .cards-btn { transform: translateX(34px); }
+            .cards-utg2 { transform: translateX(28px); }
+            .cards-btn { bottom: 14%; }
+            .cards-sb { bottom: 14%; left: 8%; }
+            .cards-co { bottom: 14%; right: 8%; }
+        }
+
+        @media (max-width: 480px) {
+            .position {
+                width: 38px;
+                height: 38px;
+                font-size: 7px;
+                border-width: 2px;
+            }
+            .position .pos-label { font-size: 7px; }
+            .position .pos-name { display: none; }
+
+            .player-card { width: 18px; height: 26px; }
+            .chip-btn { width: 20px; height: 20px; font-size: 6px; }
+            .chip-sb, .chip-bb, .chip-bb-2 { width: 16px; height: 16px; font-size: 7px; }
+
+            .info-panel { grid-template-columns: 1fr 1fr; gap: 6px; }
+            .info-card { padding: 8px 8px; }
+            .info-card .value { font-size: 14px; }
+            .info-card .desc { font-size: 11px; }
+            .info-card .badge { font-size: 10px; padding: 1px 8px; }
+
+            .spectrum-cell {
+                font-size: 7px;
+                min-width: 18px;
+                min-height: 18px;
+            }
+
+            .spectrum-suited-label { font-size: 10px; }
+            .spectrum-off-label { font-size: 10px; min-width: 16px; }
+
+            .nav-btn {
+                padding: 4px 8px;
+                font-size: 10px;
+            }
+
+            .tip {
+                font-size: 13px;
+                padding: 8px 12px;
+            }
+
+            .settings-top label { font-size: 13px; }
+            .settings-top select {
+                font-size: 14px;
+                padding: 8px 14px;
+                padding-right: 30px;
+            }
+            .settings-top { gap: 10px; }
+
+            .poker-table { border-radius: 80px/40px; border-width: 4px; }
+
+            .cards-btn { transform: translateX(26px); bottom: 16%; }
+            .cards-utg2 { transform: translateX(20px); }
+            .cards-sb { bottom: 16%; left: 4%; }
+            .cards-co { bottom: 16%; right: 4%; }
+            .cards-utg1 { top: 0%; left: 8%; }
+            .cards-mp { top: 0%; right: 8%; }
+        }
+
+        @media (max-width: 380px) {
+            .position {
+                width: 30px;
+                height: 30px;
+                font-size: 5px;
+                border-width: 1.5px;
+            }
+            .position .pos-label { font-size: 5px; }
+            .player-card { width: 14px; height: 20px; }
+            .spectrum-cell {
+                font-size: 6px;
+                min-width: 14px;
+                min-height: 14px;
+            }
+            .poker-table { border-radius: 60px/30px; }
+            .spectrum-suited-label { font-size: 8px; }
+            .spectrum-off-label { font-size: 8px; min-width: 14px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        <h1>🎯 Позиции в покере</h1>
+        <p class="subtitle">Выбери количество игроков за столом — позиции будут подстраиваться</p>
+
+        <!-- НАСТРОЙКИ -->
+        <div class="settings-top">
+            <label for="playerCount">👥 Количество игроков:</label>
+            <select id="playerCount">
+                <option value="10">10</option>
+                <option value="9">9</option>
+                <option value="8">8</option>
+                <option value="7">7</option>
+                <option value="6">6</option>
+                <option value="5">5</option>
+                <option value="4">4</option>
+                <option value="3">3</option>
+                <option value="2">2</option>
+            </select>
+        </div>
+
+        <!-- СТОЛ -->
+        <div class="table-container">
+            <div class="poker-table" id="pokerTable">
+                <div class="table-inner">♠ ♥ ♦ ♣</div>
+
+                <!-- КАРТЫ РЯДОМ С ИГРОКАМИ -->
+                <div class="player-cards cards-btn" id="cards-BTN">
+                    <div class="player-card"></div>
+                    <div class="player-card"></div>
+                </div>
+                <div class="player-cards cards-sb" id="cards-SB">
+                    <div class="player-card"></div>
+                    <div class="player-card"></div>
+                </div>
+                <div class="player-cards cards-co" id="cards-CO">
+                    <div class="player-card"></div>
+                    <div class="player-card"></div>
+                </div>
+                <div class="player-cards cards-bb" id="cards-BB">
+                    <div class="player-card"></div>
+                    <div class="player-card"></div>
+                </div>
+                <div class="player-cards cards-utg" id="cards-UTG">
+                    <div class="player-card"></div>
+                    <div class="player-card"></div>
+                </div>
+                <div class="player-cards cards-hj" id="cards-HJ">
+                    <div class="player-card"></div>
+                    <div class="player-card"></div>
+                </div>
+                <div class="player-cards cards-mp1" id="cards-MP1">
+                    <div class="player-card"></div>
+                    <div class="player-card"></div>
+                </div>
+                <div class="player-cards cards-utg1" id="cards-UTG1">
+                    <div class="player-card"></div>
+                    <div class="player-card"></div>
+                </div>
+                <div class="player-cards cards-utg2" id="cards-UTG2">
+                    <div class="player-card"></div>
+                    <div class="player-card"></div>
+                </div>
+                <div class="player-cards cards-mp" id="cards-MP">
+                    <div class="player-card"></div>
+                    <div class="player-card"></div>
+                </div>
+
+                <!-- ПОЗИЦИИ -->
+                <div class="position pos-utg" data-pos="UTG" id="pos-UTG">
+                    <span class="pos-label">UTG</span>
+                    <span class="pos-name">под пушкой</span>
+                </div>
+                <div class="position pos-utg1" data-pos="UTG1" id="pos-UTG1">
+                    <span class="pos-label">UTG+1</span>
+                    <span class="pos-name">вторая</span>
+                </div>
+                <div class="position pos-utg2" data-pos="UTG2" id="pos-UTG2">
+                    <span class="pos-label">UTG+2</span>
+                    <span class="pos-name">третья</span>
+                </div>
+                <div class="position pos-mp" data-pos="MP" id="pos-MP">
+                    <span class="pos-label">MP</span>
+                    <span class="pos-name">средняя</span>
+                </div>
+                <div class="position pos-mp1" data-pos="MP1" id="pos-MP1">
+                    <span class="pos-label">MP+1</span>
+                    <span class="pos-name">вторая сред.</span>
+                </div>
+                <div class="position pos-hj" data-pos="HJ" id="pos-HJ">
+                    <span class="pos-label">HJ</span>
+                    <span class="pos-name">HiJack</span>
+                </div>
+                <div class="position pos-co" data-pos="CO" id="pos-CO">
+                    <span class="pos-label">CO</span>
+                    <span class="pos-name">катофф</span>
+                </div>
+                <div class="position pos-btn" data-pos="BTN" id="pos-BTN">
+                    <span class="pos-label">BTN</span>
+                    <span class="pos-name">баттон</span>
+                </div>
+                <div class="position pos-sb" data-pos="SB" id="pos-SB">
+                    <span class="pos-label">SB</span>
+                    <span class="pos-name">малый блайнд</span>
+                </div>
+                <div class="position pos-bb" data-pos="BB" id="pos-BB">
+                    <span class="pos-label">BB</span>
+                    <span class="pos-name">большой блайнд</span>
+                </div>
+
+                <!-- ФИШКИ -->
+                <div class="chip chip-btn" id="chip-BTN">BTN</div>
+                <div class="chip chip-sb" id="chip-SB">5</div>
+                <div class="chip chip-bb" id="chip-BB">5</div>
+                <div class="chip chip-bb-2" id="chip-BB2">5</div>
+            </div>
+        </div>
+
+        <!-- ИНФО-ПАНЕЛЬ -->
+        <div class="info-panel" id="infoPanel">
+            <div class="info-card">
+                <div class="label">📍 Позиция</div>
+                <div class="value" id="posName">BTN</div>
+                <div class="desc" id="posDesc">Лучшая позиция за столом!</div>
+                <div class="badge" id="posBadge">👑 Лучшая позиция</div>
+            </div>
+            <div class="info-card" id="rangeCard">
+                <div class="label">📊 Диапазон рук</div>
+                <div class="value"><span class="highlight" id="handPercent">35%</span> рук</div>
+                <div class="desc" id="handDesc">Очень широкий спектр.</div>
+                <div class="groups-list" id="groupsList"></div>
+            </div>
+            <div class="info-card">
+                <div class="label">🎯 Игроков позади</div>
+                <div class="value" id="playersBehind">1</div>
+                <div class="desc" id="playersDesc">Только BB позади</div>
+            </div>
+            <div class="info-card opponent">
+                <div class="label">🔥 Оппонент рейзит</div>
+                <div class="value" id="opponentInfo">Очень широкая рука</div>
+                <div class="desc" id="opponentDesc">Может рейзить с любой одномастной рукой.</div>
+            </div>
+        </div>
+
+        <!-- СПЕКТР С ПОДПИСЯМИ -->
+        <div class="spectrum-section">
+            <div class="spectrum-title">
+                <span>📋 Спектр для <span id="spectrumPosLabel">BTN</span></span>
+                <span class="hand-count" id="handCount">~142 комбинаций</span>
+            </div>
+
+            <!-- ОБЁРТКА С ПОДПИСЯМИ -->
+            <div class="spectrum-wrapper">
+                <!-- Вертикальная подпись "Разномастные" -->
+                <div class="spectrum-off-label">Разномастные</div>
+
+                <div class="spectrum-grid-wrapper">
+                    <!-- Верхняя подпись "Одномастные" -->
+                    <div class="spectrum-suited-label">♠ Одномастные ♥</div>
+                    <div class="spectrum-grid" id="spectrumGrid"></div>
+                </div>
+            </div>
+
+            <div class="tip" id="tipBox">
+                💡 <strong>Совет:</strong> На BTN играй <strong>очень широко</strong> — это твоя самая прибыльная позиция.
+            </div>
+        </div>
+
+        <!-- НАВИГАЦИЯ -->
+        <div class="nav-buttons" id="navButtons">
+            <button class="nav-btn" data-pos="UTG">UTG</button>
+            <button class="nav-btn" data-pos="UTG1">UTG+1</button>
+            <button class="nav-btn" data-pos="UTG2">UTG+2</button>
+            <button class="nav-btn" data-pos="MP">MP</button>
+            <button class="nav-btn" data-pos="MP1">MP+1</button>
+            <button class="nav-btn" data-pos="HJ">HJ</button>
+            <button class="nav-btn" data-pos="CO">CO</button>
+            <button class="nav-btn" data-pos="BTN">BTN</button>
+            <button class="nav-btn" data-pos="SB">SB</button>
+            <button class="nav-btn" data-pos="BB">BB</button>
+        </div>
+    </div>
+
+    <script>
+        // ============================================================
+        //  1. ПОРЯДОК ИСЧЕЗНОВЕНИЯ ПОЗИЦИЙ
+        // ============================================================
+        const POSITION_ORDER = {
+            10: [],
+            9: ['UTG2'],
+            8: ['UTG2', 'MP1'],
+            7: ['UTG2', 'MP1', 'UTG1'],
+            6: ['UTG2', 'MP1', 'UTG1', 'MP'],
+            5: ['UTG2', 'MP1', 'UTG1', 'MP', 'HJ'],
+            4: ['UTG2', 'MP1', 'UTG1', 'MP', 'HJ', 'UTG'],
+            3: ['UTG2', 'MP1', 'UTG1', 'MP', 'HJ', 'UTG', 'CO'],
+            2: ['UTG2', 'MP1', 'UTG1', 'MP', 'HJ', 'UTG', 'CO', 'SB']
+        };
+
+        // ============================================================
+        //  2. КОЛИЧЕСТВО ИГРОКОВ ПОЗАДИ
+        // ============================================================
+        const BEHIND_PLAYERS = {
+            10: {
+                'UTG': 9, 'UTG1': 8, 'UTG2': 7, 'MP': 6, 'MP1': 5,
+                'HJ': 4, 'CO': 3, 'BTN': 2, 'SB': 0, 'BB': 0
+            },
+            9: {
+                'UTG': 8, 'UTG1': 7, 'UTG2': null, 'MP': 5, 'MP1': 4,
+                'HJ': 3, 'CO': 2, 'BTN': 2, 'SB': 0, 'BB': 0
+            },
+            8: {
+                'UTG': 7, 'UTG1': 6, 'UTG2': null, 'MP': 4, 'MP1': null,
+                'HJ': 3, 'CO': 2, 'BTN': 2, 'SB': 0, 'BB': 0
+            },
+            7: {
+                'UTG': 6, 'UTG1': null, 'UTG2': null, 'MP': 4, 'MP1': null,
+                'HJ': 2, 'CO': 1, 'BTN': 2, 'SB': 0, 'BB': 0
+            },
+            6: {
+                'UTG': 5, 'UTG1': null, 'UTG2': null, 'MP': null, 'MP1': null,
+                'HJ': 2, 'CO': 1, 'BTN': 2, 'SB': 0, 'BB': 0
+            },
+            5: {
+                'UTG': 4, 'UTG1': null, 'UTG2': null, 'MP': null, 'MP1': null,
+                'HJ': null, 'CO': 1, 'BTN': 2, 'SB': 0, 'BB': 0
+            },
+            4: {
+                'UTG': null, 'UTG1': null, 'UTG2': null, 'MP': null, 'MP1': null,
+                'HJ': null, 'CO': 0, 'BTN': 2, 'SB': 0, 'BB': 0
+            },
+            3: {
+                'UTG': null, 'UTG1': null, 'UTG2': null, 'MP': null, 'MP1': null,
+                'HJ': null, 'CO': null, 'BTN': 2, 'SB': 0, 'BB': 0
+            },
+            2: {
+                'UTG': null, 'UTG1': null, 'UTG2': null, 'MP': null, 'MP1': null,
+                'HJ': null, 'CO': null, 'BTN': 1, 'SB': null, 'BB': 0
+            }
+        };
+
+        // ============================================================
+        //  3. ДАННЫЕ ПО ПОЗИЦИЯМ
+        // ============================================================
+        const POSITIONS = {
+            'UTG': {
+                label: 'UTG',
+                name: 'Под пушкой',
+                percent: '10%',
+                desc: 'Самая ранняя позиция. Ты говоришь первым.',
+                badge: '⚠️ Опасная позиция',
+                opponentInfo: '🔥 Очень сильная рука',
+                opponentDesc: 'Рейз с UTG — это топ-10% рук. Уважай его рейз!',
+                groups: {
+                    great: ['AA', 'KK', 'AK']
+                },
+                tip: '💡 <strong>Совет:</strong> На UTG играй только <strong>лучшие руки</strong>. У тебя 9 игроков позади.',
+                hands: ['AA','KK','QQ','JJ','TT','99','88','77','66',
+                        'AKs','AQs','AJs','ATs','KQs',
+                        'AKo','AQo','AJo']
+            },
+            'UTG1': {
+                label: 'UTG+1',
+                name: 'Вторая позиция',
+                percent: '12%',
+                desc: 'Вторая ранняя позиция.',
+                badge: '⚠️ Опасная позиция',
+                opponentInfo: '🔥 Сильная рука',
+                opponentDesc: 'Рейз с UTG+1 — это топ-12%. Почти как UTG.',
+                groups: {
+                    great: ['AA', 'KK', 'AK']
+                },
+                tip: '💡 <strong>Совет:</strong> На UTG+1 можно добавить <strong>A9s, ATo, KJs</strong>.',
+                hands: ['AA','KK','QQ','JJ','TT','99','88','77','66',
+                        'AKs','AQs','AJs','ATs','A9s',
+                        'KQs','KJs',
+                        'AKo','AQo','AJo','ATo']
+            },
+            'UTG2': {
+                label: 'UTG+2',
+                name: 'Третья позиция',
+                percent: '14%',
+                desc: 'Третья ранняя позиция.',
+                badge: '⚠️ Опасная позиция',
+                opponentInfo: '🔥 Сильная рука',
+                opponentDesc: 'Рейз с UTG+2 — это топ-14%. Чуть шире, но всё равно опасно.',
+                groups: {
+                    great: ['AA', 'KK', 'AK'],
+                    good: ['QQ-88', 'AQ', 'AJ', 'KQ']
+                },
+                tip: '💡 <strong>Совет:</strong> На UTG+2 можно добавить <strong>A8s, KTs, KQo</strong>.',
+                hands: ['AA','KK','QQ','JJ','TT','99','88','77','66',
+                        'AKs','AQs','AJs','ATs','A9s','A8s',
+                        'KQs','KJs','KTs','KQo',
+                        'AKo','AQo','AJo','ATo']
+            },
+            'MP': {
+                label: 'MP',
+                name: 'Средняя позиция',
+                percent: '16%',
+                desc: 'Можно играть шире, но осторожно.',
+                badge: '⚖️ Средняя позиция',
+                opponentInfo: '⚠️ Средняя сила',
+                opponentDesc: 'Рейз с MP — это топ-16%. Уже может быть шире, но не мусор.',
+                groups: {
+                    great: ['AA', 'KK', 'AK'],
+                    good: ['QQ-88', 'AQ', 'AJ', 'KQ']
+                },
+                tip: '💡 <strong>Совет:</strong> На MP можно добавить <strong>A7s, A9o, KJo, 55</strong>.',
+                hands: ['AA','KK','QQ','JJ','TT','99','88','77','66','55',
+                        'AKs','AQs','AJs','ATs','A9s','A8s','A7s',
+                        'KQs','KJs','KTs','KJo','KQo',
+                        'AKo','AQo','AJo','ATo','A9o']
+            },
+            'MP1': {
+                label: 'MP+1',
+                name: 'Вторая средняя',
+                percent: '18%',
+                desc: 'Можно играть шире.',
+                badge: '✅ Хорошая позиция',
+                opponentInfo: '⚠️ Средняя сила',
+                opponentDesc: 'Рейз с MP+1 — это топ-18%. Можно коллировать шире.',
+                groups: {
+                    great: ['AA', 'KK', 'AK'],
+                    good: ['QQ-88', 'AQ', 'AJ', 'KQ']
+                },
+                tip: '💡 <strong>Совет:</strong> На MP+1 можно добавить <strong>A6s, A5s, QJs, A8o, KTo, K9s</strong>.',
+                hands: ['AA','KK','QQ','JJ','TT','99','88','77','66','55',
+                        'AKs','AQs','AJs','ATs','A9s','A8s','A7s','A6s','A5s',
+                        'KQs','KJs','KTs','KJo','KTo','K9s','KQo',
+                        'QJs',
+                        'AKo','AQo','AJo','ATo','A9o','A8o']
+            },
+            'HJ': {
+                label: 'HJ',
+                name: 'HiJack',
+                percent: '22%',
+                desc: 'Полупоздняя позиция. Играй широко.',
+                badge: '✅ Хорошая позиция',
+                opponentInfo: '🟡 Широкий диапазон',
+                opponentDesc: 'Рейз с HJ — это топ-22%. Может рейзить с одномастными коннекторами.',
+                groups: {
+                    great: ['AA', 'KK', 'AK'],
+                    good: ['QQ-88', 'AQ', 'AJ', 'KQ'],
+                    normal: ['77-22', 'A-x', 'коннекторы']
+                },
+                tip: '💡 <strong>Совет:</strong> На HJ можно добавить <strong>A4s, 44, JTs, T9s, 33, K8s, A2s, QJo</strong>.',
+                hands: ['AA','KK','QQ','JJ','TT','99','88','77','66','55','44','33',
+                        'AKs','AQs','AJs','ATs','A9s','A8s','A7s','A6s','A5s','A4s','A3s','A2s',
+                        'KQs','KJs','KTs','KJo','KTo','K9s','K8s','KQo',
+                        'QJs','QJo','QTs',
+                        'JTs','T9s',
+                        'AKo','AQo','AJo','ATo','A9o','A8o','A7o']
+            },
+            'CO': {
+                label: 'CO',
+                name: 'Cutoff',
+                percent: '27%',
+                desc: 'Катофф. Очень хорошая позиция.',
+                badge: '✅ Отличная позиция',
+                opponentInfo: '🟢 Очень широкий',
+                opponentDesc: 'Рейз с CO — это топ-27%. Может рейзить с любыми парами и одномастными.',
+                groups: {
+                    great: ['AA', 'KK', 'AK'],
+                    good: ['QQ-88', 'AQ', 'AJ', 'KQ'],
+                    normal: ['77-22', 'A-x', 'коннекторы']
+                },
+                tip: '💡 <strong>Совет:</strong> На CO можно добавить <strong>22, 98s, T8s, 97s, 87s, A5o, K9o, 76s, A4o, 65s, QTo, 54s, A3o, 96s, J9s</strong>.',
+                hands: ['AA','KK','QQ','JJ','TT','99','88','77','66','55','44','33','22',
+                        'AKs','AQs','AJs','ATs','A9s','A8s','A7s','A6s','A5s','A4s','A3s','A2s',
+                        'KQs','KJs','KTs','KJo','KTo','K9s','K8s','KQo','K9o',
+                        'QJs','QJo','QTs','QTo',
+                        'JTs','J9s',
+                        'T9s','T8s',
+                        '98s','97s','96s',
+                        '87s',
+                        '76s','75s','65s','54s',
+                        'AKo','AQo','AJo','ATo','A9o','A8o','A7o','A6o','A5o','A4o','A3o']
+            },
+            'BTN': {
+                label: 'BTN',
+                name: 'Баттон',
+                percent: '35%',
+                desc: 'Лучшая позиция за столом! Играй очень широко.',
+                badge: '👑 Лучшая позиция',
+                opponentInfo: '🟢 Максимально широкий',
+                opponentDesc: 'Рейз с BTN — это топ-35%. Может рейзить с любой одномастной рукой.',
+                groups: {
+                    great: ['AA', 'KK', 'AK'],
+                    good: ['QQ-88', 'AQ', 'AJ', 'KQ'],
+                    normal: ['77-22', 'A-x', 'коннекторы']
+                },
+                tip: '💡 <strong>Совет:</strong> На BTN играй <strong>очень широко</strong> — это твоя самая прибыльная позиция.',
+                hands: ['AA','KK','QQ','JJ','TT','99','88','77','66','55','44','33','22',
+                        'AKs','AQs','AJs','ATs','A9s','A8s','A7s','A6s','A5s','A4s','A3s','A2s',
+                        'KQs','KJs','KTs','KJo','KTo','K9s','K8s','KQo','K9o',
+                        'QJs','QJo','QTs','QTo','Q8s',
+                        'JTs','J9s','J8s',
+                        'T9s','T8s','T7s',
+                        '98s','97s','96s',
+                        '87s','86s',
+                        '76s','75s',
+                        '65s','64s',
+                        '54s',
+                        'AKo','AQo','AJo','ATo','A9o','A8o','A7o','A6o','A5o','A4o','A3o','A2o']
+            },
+            'SB': {
+                label: 'SB',
+                name: 'Малый блайнд',
+                percent: '24%',
+                desc: 'Сложная позиция, но можно играть широко на краже блайндов.',
+                badge: '⚖️ Сложная позиция',
+                opponentInfo: '🟡 Широкий, но осторожно',
+                opponentDesc: 'Рейз с SB — это топ-24%. Часто крадёт блайнды. Будь осторожен.',
+                groups: {
+                    great: ['AA', 'KK', 'AK'],
+                    good: ['QQ-88', 'AQ', 'AJ', 'KQ'],
+                    normal: ['77-22', 'A-x', 'коннекторы']
+                },
+                tip: '💡 <strong>Совет:</strong> На SB можно играть <strong>широко</strong>, если никто не открылся. Против рейза — осторожно.',
+                hands: ['AA','KK','QQ','JJ','TT','99','88','77','66','55','44','33',
+                        'AKs','AQs','AJs','ATs','A9s','A8s','A7s','A6s','A5s','A4s','A3s','A2s',
+                        'KQs','KJs','KTs','KJo','KTo','K9s','K8s','KQo',
+                        'QJs','QJo','QTs',
+                        'JTs','J9s',
+                        'T9s','T8s',
+                        '98s','97s',
+                        '87s','86s',
+                        '76s','75s','65s',
+                        'AKo','AQo','AJo','ATo','A9o','A8o','A7o']
+            },
+            'BB': {
+                label: 'BB',
+                name: 'Большой блайнд',
+                percent: 'Защита',
+                desc: 'Ты уже вложил деньги. Защищайся широко.',
+                badge: '🛡️ Защита',
+                opponentInfo: '🟢 Защита',
+                opponentDesc: 'BB может рейзить широко, защищая свой блайнд. Не давай себя украсть!',
+                groups: {
+                    great: ['AA', 'KK', 'AK'],
+                    good: ['QQ-88', 'AQ', 'AJ', 'KQ'],
+                    normal: ['77-22', 'A-x', 'коннекторы']
+                },
+                tip: '💡 <strong>Совет:</strong> На BB защищайся <strong>шире</strong>, потому что ты уже вложил 1bb.',
+                hands: ['AA','KK','QQ','JJ','TT','99','88','77','66','55','44','33','22',
+                        'AKs','AQs','AJs','ATs','A9s','A8s','A7s','A6s','A5s','A4s','A3s','A2s',
+                        'KQs','KJs','KTs','KJo','KTo','K9s','K8s','K7s','K6s','KQo',
+                        'QJs','QJo','QTs','QTo','Q9s',
+                        'JTs','JTo','J9s','J8s',
+                        'T9s','T8s','T7s',
+                        '98s','97s','87s','86s','76s','75s','65s','54s',
+                        'AKo','AQo','AJo','ATo','A9o','A8o','A7o','A6o','A5o']
+            }
+        };
+
+        // ============================================================
+        //  4. ФУНКЦИЯ ОТОБРАЖЕНИЯ ГРУПП
+        // ============================================================
+        function renderGroups(groups) {
+            if (!groups) return '';
+            const icons = {
+                great: '🔥',
+                good: '💪',
+                normal: '👍'
+            };
+            const names = {
+                great: 'Отличные',
+                good: 'Хорошие',
+                normal: 'Нормальные'
+            };
+            const classes = {
+                great: 'highlight-great',
+                good: 'highlight-good',
+                normal: 'highlight-normal'
+            };
+            let html = '';
+            for (const [key, value] of Object.entries(groups)) {
+                html += `
+                    <div class="group">
+                        <span class="group-icon">${icons[key] || ''}</span>
+                        <span class="group-name">${names[key] || key}</span>
+                        <span class="group-hands"><span class="${classes[key] || ''}">${Array.isArray(value) ? value.join(', ') : value}</span></span>
+                    </div>
+                `;
+            }
+            return html;
+        }
+
+        // ============================================================
+        //  5. ФУНКЦИЯ ОБНОВЛЕНИЯ СТОЛА
+        // ============================================================
+        function updateTable(playerCount) {
+            const hiddenPositions = POSITION_ORDER[playerCount] || [];
+
+            document.querySelectorAll('.position').forEach(el => {
+                const posId = el.id.replace('pos-', '');
+                if (hiddenPositions.includes(posId)) {
+                    el.classList.add('hidden');
+                } else {
+                    el.classList.remove('hidden');
+                }
+            });
+
+            document.querySelectorAll('.player-cards').forEach(el => {
+                const posId = el.id.replace('cards-', '');
+                if (hiddenPositions.includes(posId)) {
+                    el.classList.add('hidden');
+                } else {
+                    el.classList.remove('hidden');
+                }
+            });
+
+            const hiddenChips = [];
+            if (hiddenPositions.includes('BTN')) hiddenChips.push('chip-BTN');
+            if (hiddenPositions.includes('SB')) hiddenChips.push('chip-SB');
+            if (hiddenPositions.includes('BB')) {
+                hiddenChips.push('chip-BB');
+                hiddenChips.push('chip-BB2');
+            }
+
+            document.querySelectorAll('.chip').forEach(el => {
+                if (hiddenChips.includes(el.id)) {
+                    el.classList.add('hidden');
+                } else {
+                    el.classList.remove('hidden');
+                }
+            });
+        }
+
+        // ============================================================
+        //  6. ГЕНЕРАЦИЯ МАТРИЦЫ
+        // ============================================================
+        const RANKS = ['A', 'K', 'Q', 'J', 'T', '9', '8', '7', '6', '5', '4', '3', '2'];
+
+        function generateSpectrum(raiseHands) {
+            const grid = [];
+            for (let i = 0; i < RANKS.length; i++) {
+                grid[i] = [];
+                for (let j = 0; j < RANKS.length; j++) {
+                    const r1 = RANKS[i];
+                    const r2 = RANKS[j];
+                    let cell = { display: '', type: 'empty' };
+
+                    if (i === j) {
+                        const key = r1 + r2;
+                        cell.display = r1 + r2;
+                        cell.type = raiseHands.includes(key) ? 'raise' : 'fold';
+                    } else if (i < j) {
+                        const key = r1 + r2 + 's';
+                        cell.display = r1 + r2 + 's';
+                        cell.type = raiseHands.includes(key) ? 'raise' : 'fold';
+                    } else {
+                        const key = r2 + r1 + 'o';
+                        cell.display = r2 + r1 + 'o';
+                        cell.type = raiseHands.includes(key) ? 'raise' : 'fold';
+                    }
+
+                    grid[i][j] = cell;
+                }
+            }
+            return grid;
+        }
+
+        // ============================================================
+        //  7. КАРТЫ
+        // ============================================================
+        function showCardsForPosition(posKey) {
+            document.querySelectorAll('.player-cards').forEach(el => {
+                el.classList.remove('visible');
+            });
+
+            const cardsContainer = document.getElementById('cards-' + posKey);
+            if (cardsContainer) {
+                cardsContainer.classList.add('visible');
+            }
+        }
+
+        // ============================================================
+        //  8. ОТРИСОВКА
+        // ============================================================
+        let currentPos = 'BTN';
+
+        function renderPosition(posKey, playerCount) {
+            const pos = POSITIONS[posKey];
+            if (!pos) return;
+
+            const posElement = document.getElementById('pos-' + posKey);
+            if (posElement && posElement.classList.contains('hidden')) {
+                return;
+            }
+
+            currentPos = posKey;
+
+            const behindData = BEHIND_PLAYERS[playerCount] || BEHIND_PLAYERS[10];
+            const behind = behindData[posKey];
+            const behindText = behind !== null && behind !== undefined ? behind : '—';
+
+            document.getElementById('posName').textContent = pos.label + ' — ' + pos.name;
+            document.getElementById('posDesc').textContent = pos.desc;
+            document.getElementById('posBadge').textContent = pos.badge;
+            document.getElementById('handPercent').textContent = pos.percent;
+            document.getElementById('handDesc').textContent = `Спектр для ${pos.label}.`;
+            document.getElementById('playersBehind').textContent = behindText;
+            document.getElementById('playersDesc').textContent = behindText === '—' ? 'Позиция неактивна' : behindText === 0 ? 'Ты последний!' : `Позади ${behindText} игроков`;
+            document.getElementById('opponentInfo').textContent = pos.opponentInfo;
+            document.getElementById('opponentDesc').textContent = pos.opponentDesc;
+            document.getElementById('tipBox').innerHTML = pos.tip;
+            document.getElementById('spectrumPosLabel').textContent = pos.label;
+            document.getElementById('handCount').textContent = `~${pos.hands.length} комбинаций`;
+
+            document.getElementById('groupsList').innerHTML = renderGroups(pos.groups);
+
+            document.querySelectorAll('.position').forEach(el => {
+                el.classList.remove('active');
+            });
+            if (posElement) {
+                posElement.classList.add('active');
+            }
+
+            document.querySelectorAll('.nav-btn').forEach(el => {
+                el.classList.toggle('active', el.dataset.pos === posKey);
+            });
+
+            const grid = generateSpectrum(pos.hands);
+            const container = document.getElementById('spectrumGrid');
+            container.innerHTML = '';
+
+            for (let i = 0; i < RANKS.length; i++) {
+                for (let j = 0; j < RANKS.length; j++) {
+                    const cell = grid[i][j];
+                    const div = document.createElement('div');
+                    div.className = `spectrum-cell ${cell.type}`;
+                    div.textContent = cell.display;
+                    container.appendChild(div);
+                }
+            }
+
+            showCardsForPosition(posKey);
+        }
+
+        // ============================================================
+        //  9. СОБЫТИЯ
+        // ============================================================
+        document.addEventListener('DOMContentLoaded', () => {
+            const playerSelect = document.getElementById('playerCount');
+
+            playerSelect.addEventListener('change', function() {
+                const count = parseInt(this.value);
+                updateTable(count);
+                const posElement = document.getElementById('pos-' + currentPos);
+                if (posElement && posElement.classList.contains('hidden')) {
+                    renderPosition('BTN', count);
+                } else {
+                    renderPosition(currentPos, count);
+                }
+            });
+
+            document.querySelectorAll('.position').forEach(el => {
+                el.addEventListener('click', function() {
+                    if (this.classList.contains('hidden')) return;
+                    const count = parseInt(document.getElementById('playerCount').value);
+                    renderPosition(this.dataset.pos, count);
+                });
+            });
+
+            document.querySelectorAll('.nav-btn').forEach(el => {
+                el.addEventListener('click', function() {
+                    const count = parseInt(document.getElementById('playerCount').value);
+                    renderPosition(this.dataset.pos, count);
+                });
+            });
+
+            const initialCount = parseInt(document.getElementById('playerCount').value);
+            updateTable(initialCount);
+            renderPosition('BTN', initialCount);
+        });
+    </script>
+
+</body>
+</html>
