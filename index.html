@@ -196,7 +196,6 @@
             opacity: 0.6;
         }
 
-        /* ===== УБИРАЕМ SCALE ПРИ HOVER ===== */
         .position:hover {
             border-color: #fbbf24;
             box-shadow: 0 0 25px rgba(251, 191, 36, 0.25);
@@ -392,7 +391,7 @@
         .groups-list {
             margin-top: 6px;
             font-size: 12px;
-            line-height: 1.6;
+            line-height: 1.5;
         }
         .groups-list .group {
             display: flex;
@@ -404,16 +403,19 @@
             font-size: 13px;
             width: 18px;
             text-align: center;
+            flex-shrink: 0;
         }
         .groups-list .group-name {
             color: #d4d9ec;
             font-weight: 600;
-            min-width: 60px;
+            min-width: 55px;
             font-size: 12px;
+            flex-shrink: 0;
         }
         .groups-list .group-hands {
             color: #a9b0c9;
             font-size: 12px;
+            word-break: break-word;
         }
         .groups-list .group-hands .highlight-great { color: #fbbf24; font-weight: 700; }
         .groups-list .group-hands .highlight-good { color: #86efac; font-weight: 600; }
@@ -465,8 +467,11 @@
             background: rgba(18, 22, 33, 0.3);
             border-radius: 6px;
             border: 1px solid rgba(255, 255, 255, 0.05);
-            text-transform: uppercase;
             user-select: none;
+        }
+
+        .spectrum-off-label .suit {
+            color: #f87171;
         }
 
         .spectrum-grid-wrapper {
@@ -487,7 +492,6 @@
             font-size: 13px;
             font-weight: 600;
             letter-spacing: 0.5px;
-            text-transform: uppercase;
             padding-bottom: 4px;
             margin-bottom: 4px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
@@ -495,11 +499,7 @@
         }
 
         .spectrum-suited-label .suit {
-            color: #fbbf24;
-        }
-
-        .spectrum-off-label .suit {
-            color: #fbbf24;
+            color: #34d399;
         }
 
         .spectrum-cell {
@@ -509,12 +509,12 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 16px;
+            font-size: 14px;
             font-weight: 700;
             color: #4a5070;
             border: 1px solid #262d3e;
-            min-width: 28px;
-            min-height: 28px;
+            min-width: 26px;
+            min-height: 26px;
             transition: all 0.2s;
         }
 
@@ -609,14 +609,14 @@
             .info-card .label { font-size: 10px; }
 
             .groups-list { font-size: 10px; }
-            .groups-list .group-name { font-size: 10px; min-width: 45px; }
+            .groups-list .group-name { font-size: 10px; min-width: 40px; }
             .groups-list .group-hands { font-size: 10px; }
             .groups-list .group-icon { font-size: 11px; width: 15px; }
 
             .spectrum-cell {
-                font-size: 13px;
-                min-width: 22px;
-                min-height: 22px;
+                font-size: 11px;
+                min-width: 20px;
+                min-height: 20px;
             }
 
             .spectrum-suited-label { font-size: 11px; }
@@ -665,10 +665,15 @@
             .info-card .desc { font-size: 11px; }
             .info-card .badge { font-size: 10px; padding: 1px 8px; }
 
+            .groups-list { font-size: 9px; }
+            .groups-list .group-name { font-size: 9px; min-width: 35px; }
+            .groups-list .group-hands { font-size: 9px; }
+            .groups-list .group-icon { font-size: 10px; width: 14px; }
+
             .spectrum-cell {
-                font-size: 10px;
-                min-width: 16px;
-                min-height: 16px;
+                font-size: 9px;
+                min-width: 15px;
+                min-height: 15px;
             }
 
             .spectrum-suited-label { font-size: 9px; }
@@ -725,12 +730,11 @@
             .cards-utg2 { left: 40%; }
         }
 
-        /* ЛАНДШАФТНАЯ ОРИЕНТАЦИЯ — ШРИФТ НЕ МЕНЯЕТСЯ */
         @media (orientation: landscape) and (max-height: 500px) {
             .spectrum-cell {
-                font-size: 14px;
-                min-width: 24px;
-                min-height: 24px;
+                font-size: 12px;
+                min-width: 22px;
+                min-height: 22px;
             }
             .position {
                 width: 44px;
@@ -902,9 +906,11 @@
             </div>
 
             <div class="spectrum-wrapper">
-                <div class="spectrum-off-label"><span class="suit">♠</span><br>Разно<br>мастные</div>
+                <!-- Разномастные — ♥ ♦ -->
+                <div class="spectrum-off-label"><span class="suit">♥</span><span class="suit">♦</span><br>Разно<br>мастные</div>
                 <div class="spectrum-grid-wrapper">
-                    <div class="spectrum-suited-label"><span class="suit">♠</span> Одномастные <span class="suit">♥</span> <span class="suit">♦</span> <span class="suit">♣</span></div>
+                    <!-- Одномастные — ♠ ♣ -->
+                    <div class="spectrum-suited-label"><span class="suit">♠</span><span class="suit">♣</span> Одномастные</div>
                     <div class="spectrum-grid" id="spectrumGrid"></div>
                 </div>
             </div>
