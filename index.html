@@ -175,7 +175,7 @@
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
             user-select: none;
             z-index: 10;
-            transition: opacity 0.3s ease, transform 0.3s ease;
+            transition: opacity 0.3s ease;
             cursor: pointer;
         }
 
@@ -196,8 +196,8 @@
             opacity: 0.6;
         }
 
+        /* ===== УБИРАЕМ SCALE ПРИ HOVER ===== */
         .position:hover {
-            transform: scale(1.12);
             border-color: #fbbf24;
             box-shadow: 0 0 25px rgba(251, 191, 36, 0.25);
             z-index: 20;
@@ -207,7 +207,6 @@
             border-color: #fbbf24;
             background: rgba(251, 191, 36, 0.2);
             box-shadow: 0 0 35px rgba(251, 191, 36, 0.35);
-            transform: scale(1.1);
             z-index: 20;
         }
 
@@ -216,7 +215,7 @@
         }
 
         /* ===== РАССТАНОВКА ===== */
-        .pos-btn { bottom: 4%; left: 50%; transform: translateX(-50%); }
+        .pos-btn { bottom: 4%; left: 47%; transform: translateX(-50%); }
         .pos-sb { bottom: 4%; left: 18%; }
         .pos-co { bottom: 4%; right: 18%; }
         .pos-bb { bottom: 24%; left: 2%; }
@@ -263,15 +262,15 @@
             pointer-events: none !important;
         }
 
-        .cards-btn { bottom: 12%; left: 50%; transform: translateX(46px); }
+        .cards-btn { bottom: 12%; left: 54%; }
         .cards-sb { bottom: 12%; left: 12%; }
         .cards-co { bottom: 12%; right: 12%; }
         .cards-bb { bottom: 32%; left: -4%; }
         .cards-utg { bottom: 68%; left: -4%; }
-        .cards-hj { bottom: 32%; right: -4%; }      /* ИСПРАВЛЕНО */
-        .cards-mp1 { bottom: 68%; right: -4%; }      /* ИСПРАВЛЕНО */
+        .cards-hj { bottom: 32%; right: -4%; }
+        .cards-mp1 { bottom: 68%; right: -4%; }
         .cards-utg1 { top: -2%; left: 12%; }
-        .cards-utg2 { top: -2%; left: 50%; transform: translateX(38px); }
+        .cards-utg2 { top: -2%; left: 46%; }
         .cards-mp { top: -2%; right: 12%; }
 
         /* ===== ФИШКИ ===== */
@@ -392,7 +391,7 @@
         /* ===== ГРАДАЦИЯ КАРТ ===== */
         .groups-list {
             margin-top: 6px;
-            font-size: 13px;
+            font-size: 12px;
             line-height: 1.6;
         }
         .groups-list .group {
@@ -402,25 +401,25 @@
             padding: 1px 0;
         }
         .groups-list .group-icon {
-            font-size: 14px;
+            font-size: 13px;
             width: 18px;
             text-align: center;
         }
         .groups-list .group-name {
             color: #d4d9ec;
             font-weight: 600;
-            min-width: 65px;
-            font-size: 13px;
+            min-width: 60px;
+            font-size: 12px;
         }
         .groups-list .group-hands {
             color: #a9b0c9;
-            font-size: 13px;
+            font-size: 12px;
         }
         .groups-list .group-hands .highlight-great { color: #fbbf24; font-weight: 700; }
         .groups-list .group-hands .highlight-good { color: #86efac; font-weight: 600; }
         .groups-list .group-hands .highlight-normal { color: #fcd34d; font-weight: 500; }
 
-        /* ===== СПЕКТР (С ПОДПИСЯМИ) ===== */
+        /* ===== СПЕКТР ===== */
         .spectrum-section {
             background: rgba(18, 22, 33, 0.5);
             border-radius: 14px;
@@ -455,13 +454,13 @@
             writing-mode: vertical-rl;
             text-orientation: mixed;
             color: #7b839e;
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 600;
-            letter-spacing: 2px;
+            letter-spacing: 1px;
             display: flex;
             align-items: center;
             justify-content: center;
-            min-width: 24px;
+            min-width: 22px;
             padding: 4px 0;
             background: rgba(18, 22, 33, 0.3);
             border-radius: 6px;
@@ -485,14 +484,22 @@
         .spectrum-suited-label {
             text-align: center;
             color: #7b839e;
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 600;
-            letter-spacing: 1px;
+            letter-spacing: 0.5px;
             text-transform: uppercase;
             padding-bottom: 4px;
             margin-bottom: 4px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
             user-select: none;
+        }
+
+        .spectrum-suited-label .suit {
+            color: #fbbf24;
+        }
+
+        .spectrum-off-label .suit {
+            color: #fbbf24;
         }
 
         .spectrum-cell {
@@ -502,12 +509,12 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 18px;
+            font-size: 16px;
             font-weight: 700;
             color: #4a5070;
             border: 1px solid #262d3e;
-            min-width: 32px;
-            min-height: 32px;
+            min-width: 28px;
+            min-height: 28px;
             transition: all 0.2s;
         }
 
@@ -561,7 +568,6 @@
             color: #fbbf24;
         }
 
-        /* ===== ПОДСКАЗКА ===== */
         .tip {
             margin-top: 14px;
             padding: 14px 18px;
@@ -602,19 +608,19 @@
             .info-card .desc { font-size: 12px; }
             .info-card .label { font-size: 10px; }
 
-            .groups-list { font-size: 11px; }
-            .groups-list .group-name { font-size: 11px; min-width: 50px; }
-            .groups-list .group-hands { font-size: 11px; }
-            .groups-list .group-icon { font-size: 12px; width: 15px; }
+            .groups-list { font-size: 10px; }
+            .groups-list .group-name { font-size: 10px; min-width: 45px; }
+            .groups-list .group-hands { font-size: 10px; }
+            .groups-list .group-icon { font-size: 11px; width: 15px; }
 
             .spectrum-cell {
-                font-size: 14px;
-                min-width: 24px;
-                min-height: 24px;
+                font-size: 13px;
+                min-width: 22px;
+                min-height: 22px;
             }
 
-            .spectrum-suited-label { font-size: 12px; }
-            .spectrum-off-label { font-size: 12px; min-width: 20px; }
+            .spectrum-suited-label { font-size: 11px; }
+            .spectrum-off-label { font-size: 11px; min-width: 18px; }
 
             .nav-btn {
                 padding: 6px 10px;
@@ -633,11 +639,10 @@
                 padding-right: 36px;
             }
 
-            .cards-btn { transform: translateX(34px); }
-            .cards-utg2 { transform: translateX(28px); }
-            .cards-btn { bottom: 14%; }
+            .cards-btn { bottom: 14%; left: 56%; }
             .cards-sb { bottom: 14%; left: 8%; }
             .cards-co { bottom: 14%; right: 8%; }
+            .cards-utg2 { top: 0%; left: 44%; }
         }
 
         @media (max-width: 480px) {
@@ -661,13 +666,13 @@
             .info-card .badge { font-size: 10px; padding: 1px 8px; }
 
             .spectrum-cell {
-                font-size: 11px;
-                min-width: 18px;
-                min-height: 18px;
+                font-size: 10px;
+                min-width: 16px;
+                min-height: 16px;
             }
 
-            .spectrum-suited-label { font-size: 10px; }
-            .spectrum-off-label { font-size: 10px; min-width: 16px; }
+            .spectrum-suited-label { font-size: 9px; }
+            .spectrum-off-label { font-size: 9px; min-width: 14px; }
 
             .nav-btn {
                 padding: 4px 8px;
@@ -689,8 +694,8 @@
 
             .poker-table { border-radius: 80px/40px; border-width: 4px; }
 
-            .cards-btn { transform: translateX(26px); bottom: 16%; }
-            .cards-utg2 { transform: translateX(20px); }
+            .cards-btn { bottom: 16%; left: 56%; }
+            .cards-utg2 { top: 0%; left: 42%; }
             .cards-sb { bottom: 16%; left: 4%; }
             .cards-co { bottom: 16%; right: 4%; }
             .cards-utg1 { top: 0%; left: 8%; }
@@ -707,15 +712,36 @@
             .position .pos-label { font-size: 5px; }
             .player-card { width: 14px; height: 20px; }
             .spectrum-cell {
-                font-size: 9px;
-                min-width: 14px;
-                min-height: 14px;
+                font-size: 8px;
+                min-width: 13px;
+                min-height: 13px;
             }
             .poker-table { border-radius: 60px/30px; }
             .spectrum-suited-label { font-size: 8px; }
-            .spectrum-off-label { font-size: 8px; min-width: 14px; }
+            .spectrum-off-label { font-size: 8px; min-width: 12px; }
             .header h1 { font-size: 17px; }
             .header .sub-brand { font-size: 10px; }
+            .cards-btn { left: 58%; }
+            .cards-utg2 { left: 40%; }
+        }
+
+        /* ЛАНДШАФТНАЯ ОРИЕНТАЦИЯ — ШРИФТ НЕ МЕНЯЕТСЯ */
+        @media (orientation: landscape) and (max-height: 500px) {
+            .spectrum-cell {
+                font-size: 14px;
+                min-width: 24px;
+                min-height: 24px;
+            }
+            .position {
+                width: 44px;
+                height: 44px;
+                font-size: 8px;
+            }
+            .position .pos-label { font-size: 8px; }
+            .position .pos-name { font-size: 6px; }
+            .header h1 { font-size: 18px; }
+            .info-card .value { font-size: 15px; }
+            .info-card .desc { font-size: 11px; }
         }
     </style>
 </head>
@@ -876,9 +902,9 @@
             </div>
 
             <div class="spectrum-wrapper">
-                <div class="spectrum-off-label">Разномастные</div>
+                <div class="spectrum-off-label"><span class="suit">♠</span><br>Разно<br>мастные</div>
                 <div class="spectrum-grid-wrapper">
-                    <div class="spectrum-suited-label">♠ Одномастные ♥</div>
+                    <div class="spectrum-suited-label"><span class="suit">♠</span> Одномастные <span class="suit">♥</span> <span class="suit">♦</span> <span class="suit">♣</span></div>
                     <div class="spectrum-grid" id="spectrumGrid"></div>
                 </div>
             </div>
@@ -962,7 +988,7 @@
         };
 
         // ============================================================
-        //  3. ДАННЫЕ ПО ПОЗИЦИЯМ (СО ВСЕМИ ИЗМЕНЕНИЯМИ)
+        //  3. ДАННЫЕ ПО ПОЗИЦИЯМ
         // ============================================================
         const POSITIONS = {
             'UTG': {
@@ -1099,7 +1125,6 @@
                         '76s','75s','65s','54s',
                         'AKo','AQo','AJo','ATo','A9o','A8o','A7o','A6o','A5o','A4o','A3o']
             },
-            // ========== ИЗМЕНЕНИЯ ТУТ ==========
             'BTN': {
                 label: 'BTN',
                 name: 'Баттон',
@@ -1127,7 +1152,6 @@
                         '54s',
                         'AKo','AQo','AJo','ATo','A9o','A8o','A7o','A6o','A5o','A4o','A3o','A2o']
             },
-            // ========== ИЗМЕНЕНИЯ ТУТ ==========
             'SB': {
                 label: 'SB',
                 name: 'Малый блайнд',
