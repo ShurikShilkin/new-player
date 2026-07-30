@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Позиции в покере — 10-макс</title>
+    <title>Позиции в покере — Софт Шурика</title>
     <style>
         * {
             margin: 0;
@@ -32,18 +32,43 @@
             border: 1px solid rgba(255, 255, 255, 0.03);
         }
 
-        h1 {
+        /* ===== ШАПКА ===== */
+        .header {
+            text-align: center;
+            margin-bottom: 16px;
+        }
+
+        .header h1 {
             color: #f0e9d8;
             font-weight: 400;
             font-size: 24px;
-            text-align: center;
             letter-spacing: 1px;
         }
+
+        .header h1 .spade {
+            color: #fbbf24;
+            font-size: 28px;
+        }
+
+        .header .sub-brand {
+            color: #7b839e;
+            font-size: 13px;
+            letter-spacing: 2px;
+            margin-top: 2px;
+            opacity: 0.6;
+            font-weight: 300;
+        }
+
+        .header .sub-brand span {
+            color: #fbbf24;
+            font-weight: 600;
+        }
+
         .subtitle {
             color: #7b839e;
             text-align: center;
-            font-size: 15px;
-            margin-bottom: 20px;
+            font-size: 14px;
+            margin-bottom: 18px;
             opacity: 0.7;
         }
 
@@ -59,7 +84,7 @@
 
         .settings-top label {
             color: #a9b0c9;
-            font-size: 17px;
+            font-size: 16px;
             font-weight: 600;
             letter-spacing: 0.5px;
         }
@@ -70,7 +95,7 @@
             border: 1px solid #2e3548;
             border-radius: 14px;
             color: #f0e9d8;
-            font-size: 19px;
+            font-size: 18px;
             font-weight: 500;
             outline: none;
             cursor: pointer;
@@ -243,8 +268,8 @@
         .cards-co { bottom: 12%; right: 12%; }
         .cards-bb { bottom: 32%; left: -4%; }
         .cards-utg { bottom: 68%; left: -4%; }
-        .cards-hj { bottom: 68%; right: -4%; }
-        .cards-mp1 { bottom: 32%; right: -4%; }
+        .cards-hj { bottom: 32%; right: -4%; }      /* ИСПРАВЛЕНО */
+        .cards-mp1 { bottom: 68%; right: -4%; }      /* ИСПРАВЛЕНО */
         .cards-utg1 { top: -2%; left: 12%; }
         .cards-utg2 { top: -2%; left: 50%; transform: translateX(38px); }
         .cards-mp { top: -2%; right: 12%; }
@@ -420,14 +445,12 @@
             font-size: 16px;
         }
 
-        /* ОБЁРТКА ДЛЯ ТАБЛИЦЫ С ПОДПИСЯМИ */
         .spectrum-wrapper {
             display: flex;
             align-items: stretch;
             gap: 6px;
         }
 
-        /* ВЕРТИКАЛЬНАЯ ПОДПИСЬ "Разномастные" */
         .spectrum-off-label {
             writing-mode: vertical-rl;
             text-orientation: mixed;
@@ -459,7 +482,6 @@
             max-width: 100%;
         }
 
-        /* ВЕРХНЯЯ ПОДПИСЬ "Одномастные" */
         .spectrum-suited-label {
             text-align: center;
             color: #7b839e;
@@ -480,8 +502,8 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 12px;
-            font-weight: 600;
+            font-size: 18px;
+            font-weight: 700;
             color: #4a5070;
             border: 1px solid #262d3e;
             min-width: 32px;
@@ -554,10 +576,11 @@
             color: #fbbf24;
         }
 
-        /* ===== АДАПТИВ ДЛЯ ТЕЛЕФОНА ===== */
+        /* ===== АДАПТИВ ===== */
         @media (max-width: 768px) {
             .app-container { padding: 12px 10px; border-radius: 24px; }
-            h1 { font-size: 20px; }
+            .header h1 { font-size: 20px; }
+            .header .sub-brand { font-size: 11px; }
             .subtitle { font-size: 13px; margin-bottom: 14px; }
 
             .position {
@@ -585,7 +608,7 @@
             .groups-list .group-icon { font-size: 12px; width: 15px; }
 
             .spectrum-cell {
-                font-size: 9px;
+                font-size: 14px;
                 min-width: 24px;
                 min-height: 24px;
             }
@@ -638,7 +661,7 @@
             .info-card .badge { font-size: 10px; padding: 1px 8px; }
 
             .spectrum-cell {
-                font-size: 7px;
+                font-size: 11px;
                 min-width: 18px;
                 min-height: 18px;
             }
@@ -684,20 +707,26 @@
             .position .pos-label { font-size: 5px; }
             .player-card { width: 14px; height: 20px; }
             .spectrum-cell {
-                font-size: 6px;
+                font-size: 9px;
                 min-width: 14px;
                 min-height: 14px;
             }
             .poker-table { border-radius: 60px/30px; }
             .spectrum-suited-label { font-size: 8px; }
             .spectrum-off-label { font-size: 8px; min-width: 14px; }
+            .header h1 { font-size: 17px; }
+            .header .sub-brand { font-size: 10px; }
         }
     </style>
 </head>
 <body>
 
     <div class="app-container">
-        <h1>🎯 Позиции в покере</h1>
+        <!-- ШАПКА -->
+        <div class="header">
+            <h1><span class="spade">♠</span> Позиции в покере</h1>
+            <div class="sub-brand">Софт <span>Шурика</span></div>
+        </div>
         <p class="subtitle">Выбери количество игроков за столом — позиции будут подстраиваться</p>
 
         <!-- НАСТРОЙКИ -->
@@ -823,7 +852,7 @@
             </div>
             <div class="info-card" id="rangeCard">
                 <div class="label">📊 Диапазон рук</div>
-                <div class="value"><span class="highlight" id="handPercent">35%</span> рук</div>
+                <div class="value"><span class="highlight" id="handPercent">38%</span> рук</div>
                 <div class="desc" id="handDesc">Очень широкий спектр.</div>
                 <div class="groups-list" id="groupsList"></div>
             </div>
@@ -839,20 +868,16 @@
             </div>
         </div>
 
-        <!-- СПЕКТР С ПОДПИСЯМИ -->
+        <!-- СПЕКТР -->
         <div class="spectrum-section">
             <div class="spectrum-title">
                 <span>📋 Спектр для <span id="spectrumPosLabel">BTN</span></span>
                 <span class="hand-count" id="handCount">~142 комбинаций</span>
             </div>
 
-            <!-- ОБЁРТКА С ПОДПИСЯМИ -->
             <div class="spectrum-wrapper">
-                <!-- Вертикальная подпись "Разномастные" -->
                 <div class="spectrum-off-label">Разномастные</div>
-
                 <div class="spectrum-grid-wrapper">
-                    <!-- Верхняя подпись "Одномастные" -->
                     <div class="spectrum-suited-label">♠ Одномастные ♥</div>
                     <div class="spectrum-grid" id="spectrumGrid"></div>
                 </div>
@@ -937,7 +962,7 @@
         };
 
         // ============================================================
-        //  3. ДАННЫЕ ПО ПОЗИЦИЯМ
+        //  3. ДАННЫЕ ПО ПОЗИЦИЯМ (СО ВСЕМИ ИЗМЕНЕНИЯМИ)
         // ============================================================
         const POSITIONS = {
             'UTG': {
@@ -1074,14 +1099,15 @@
                         '76s','75s','65s','54s',
                         'AKo','AQo','AJo','ATo','A9o','A8o','A7o','A6o','A5o','A4o','A3o']
             },
+            // ========== ИЗМЕНЕНИЯ ТУТ ==========
             'BTN': {
                 label: 'BTN',
                 name: 'Баттон',
-                percent: '35%',
+                percent: '38%',
                 desc: 'Лучшая позиция за столом! Играй очень широко.',
                 badge: '👑 Лучшая позиция',
                 opponentInfo: '🟢 Максимально широкий',
-                opponentDesc: 'Рейз с BTN — это топ-35%. Может рейзить с любой одномастной рукой.',
+                opponentDesc: 'Рейз с BTN — это топ-38%. Может рейзить с любой одномастной рукой.',
                 groups: {
                     great: ['AA', 'KK', 'AK'],
                     good: ['QQ-88', 'AQ', 'AJ', 'KQ'],
@@ -1091,8 +1117,8 @@
                 hands: ['AA','KK','QQ','JJ','TT','99','88','77','66','55','44','33','22',
                         'AKs','AQs','AJs','ATs','A9s','A8s','A7s','A6s','A5s','A4s','A3s','A2s',
                         'KQs','KJs','KTs','KJo','KTo','K9s','K8s','KQo','K9o',
-                        'QJs','QJo','QTs','QTo','Q8s',
-                        'JTs','J9s','J8s',
+                        'QJs','QJo','QTs','QTo','Q9s','Q8s','Q9o',
+                        'JTs','J9s','J8s','JTo','J9o',
                         'T9s','T8s','T7s',
                         '98s','97s','96s',
                         '87s','86s',
@@ -1101,30 +1127,31 @@
                         '54s',
                         'AKo','AQo','AJo','ATo','A9o','A8o','A7o','A6o','A5o','A4o','A3o','A2o']
             },
+            // ========== ИЗМЕНЕНИЯ ТУТ ==========
             'SB': {
                 label: 'SB',
                 name: 'Малый блайнд',
-                percent: '24%',
+                percent: '32%',
                 desc: 'Сложная позиция, но можно играть широко на краже блайндов.',
                 badge: '⚖️ Сложная позиция',
                 opponentInfo: '🟡 Широкий, но осторожно',
-                opponentDesc: 'Рейз с SB — это топ-24%. Часто крадёт блайнды. Будь осторожен.',
+                opponentDesc: 'Рейз с SB — это топ-32%. Часто крадёт блайнды. Будь осторожен.',
                 groups: {
                     great: ['AA', 'KK', 'AK'],
                     good: ['QQ-88', 'AQ', 'AJ', 'KQ'],
                     normal: ['77-22', 'A-x', 'коннекторы']
                 },
                 tip: '💡 <strong>Совет:</strong> На SB можно играть <strong>широко</strong>, если никто не открылся. Против рейза — осторожно.',
-                hands: ['AA','KK','QQ','JJ','TT','99','88','77','66','55','44','33',
+                hands: ['AA','KK','QQ','JJ','TT','99','88','77','66','55','44','33','22',
                         'AKs','AQs','AJs','ATs','A9s','A8s','A7s','A6s','A5s','A4s','A3s','A2s',
                         'KQs','KJs','KTs','KJo','KTo','K9s','K8s','KQo',
-                        'QJs','QJo','QTs',
-                        'JTs','J9s',
-                        'T9s','T8s',
+                        'QJs','QJo','QTs','QTo','Q9s','Q8s',
+                        'JTs','J9s','J8s','JTo','J9o',
+                        'T9s','T8s','T7s',
                         '98s','97s',
                         '87s','86s',
                         '76s','75s','65s',
-                        'AKo','AQo','AJo','ATo','A9o','A8o','A7o']
+                        'AKo','AQo','AJo','ATo','A9o','A8o','A7o','A6o','A5o','A4o','A3o','A2o']
             },
             'BB': {
                 label: 'BB',
