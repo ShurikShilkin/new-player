@@ -214,7 +214,7 @@
         }
 
         /* ===== РАССТАНОВКА ===== */
-        .pos-btn { bottom: 4%; left: 50%; transform: translateX(-50%); }
+        .pos-btn { bottom: 4%; left: 47%; transform: translateX(-50%); }
         .pos-sb { bottom: 4%; left: 18%; }
         .pos-co { bottom: 4%; right: 18%; }
         .pos-bb { bottom: 24%; left: 2%; }
@@ -264,13 +264,13 @@
         .cards-btn { bottom: 12%; left: 54%; }
         .cards-sb { bottom: 12%; left: 12%; }
         .cards-co { bottom: 12%; right: 12%; }
-        .cards-bb { bottom: 32%; left: -4%; }
-        .cards-utg { bottom: 68%; left: -4%; }
-        .cards-hj { bottom: 32%; right: -4%; }
-        .cards-mp1 { bottom: 68%; right: -4%; }
-        .cards-utg1 { top: -2%; left: 12%; }
+        .cards-bb { bottom: 32%; left: 12%; }
+        .cards-utg { bottom: 55%; left: 12%; }
+        .cards-hj { bottom: 32%; right: 10%; }
+        .cards-mp1 { bottom: 55%; right: 10%; }
+        .cards-utg1 { top: 18%; left: 20%; }
         .cards-utg2 { top: -2%; left: 46%; }
-        .cards-mp { top: -2%; right: 12%; }
+        .cards-mp { top: 18%; right: 20%; }
 
         /* ===== ФИШКИ ===== */
         .chip {
@@ -452,7 +452,7 @@
             gap: 6px;
         }
 
-        /* ===== РАЗНОМАСТНЫЕ — ВЕРТИКАЛЬНО ===== */
+        /* ===== РАЗНОМАСТНЫЕ — ВЕРТИКАЛЬНО, БЕЗ ЗНАЧКОВ ===== */
         .spectrum-off-label {
             writing-mode: horizontal-tb;
             color: #7b839e;
@@ -469,13 +469,7 @@
             border-radius: 6px;
             border: 1px solid rgba(255, 255, 255, 0.05);
             user-select: none;
-            text-transform: uppercase;
             line-height: 1.2;
-        }
-
-        .spectrum-off-label .suit {
-            color: #f87171;
-            font-size: 14px;
         }
 
         .spectrum-grid-wrapper {
@@ -500,11 +494,6 @@
             margin-bottom: 4px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
             user-select: none;
-        }
-
-        .spectrum-suited-label .suit {
-            color: #34d399;
-            font-size: 14px;
         }
 
         .spectrum-cell {
@@ -644,10 +633,10 @@
                 padding-right: 36px;
             }
 
-            .cards-btn { bottom: 14%; left: 56%; }
-            .cards-sb { bottom: 14%; left: 8%; }
-            .cards-co { bottom: 14%; right: 8%; }
-            .cards-utg2 { top: 0%; left: 44%; }
+            .cards-btn { bottom: 18%; left: 50%; }
+            .cards-sb { bottom: 18%; left: 25%; }
+            .cards-co { bottom: 18%; right: 14%; }
+            .cards-utg2 { top: 20%; left: 44%; }
         }
 
         @media (max-width: 480px) {
@@ -911,16 +900,14 @@
             </div>
 
             <div class="spectrum-wrapper">
-                <!-- РАЗНОМАСТНЫЕ — ВЕРТИКАЛЬНО, ♥ ПЕРЕД, ♦ ПОСЛЕ -->
+                <!-- РАЗНОМАСТНЫЕ — ВЕРТИКАЛЬНО, БЕЗ ЗНАЧКОВ -->
                 <div class="spectrum-off-label">
-                    <span class="suit">♥</span>
-                    Р<br>а<br>з<br>н<br>о<br>м<br>а<br>с<br>т<br>н<br>ы<br>е
-                    <span class="suit">♦</span>
+                    Р<br>А<br>З<br>Н<br>О<br>М<br>А<br>С<br>Т<br>Н<br>Ы<br>Е
                 </div>
                 <div class="spectrum-grid-wrapper">
-                    <!-- ОДНОМАСТНЫЕ — ♠ ПЕРЕД, ♣ ПОСЛЕ -->
+                    <!-- ОДНОМАСТНЫЕ — БЕЗ ЗНАЧКОВ -->
                     <div class="spectrum-suited-label">
-                        <span class="suit">♠</span> Одномастные <span class="suit">♣</span>
+                        ОДНОМАСТНЫЕ
                     </div>
                     <div class="spectrum-grid" id="spectrumGrid"></div>
                 </div>
